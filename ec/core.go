@@ -5,13 +5,14 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"io"
 	"log"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
+
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var defaultModule = "DEFAULT"
@@ -450,7 +451,7 @@ func resolveProperties(path string) (map[string]string, error) {
 		}
 		lineContent := string(line)
 		prop := strings.TrimSpace(lineContent)
-		if prop == "" {
+		if prop == "" || strings.HasPrefix(prop, "#") || strings.HasPrefix(prop, "//") || !strings.Contains(prop, "=") {
 			continue
 		}
 		key := prop[:strings.Index(prop, "=")]
